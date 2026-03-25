@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: tilla-postgres
+    environment:
+      POSTGRES_DB: tilla_seaports
+      POSTGRES_USER: tilla
+      POSTGRES_PASSWORD: tilla
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tilla -d tilla_seaports"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
