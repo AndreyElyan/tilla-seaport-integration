@@ -8,7 +8,7 @@ import { AppResolver } from "./app.resolver";
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      playground: false,
+      playground: process.env.NODE_ENV !== "production",
       plugins: [],
     }),
   ],

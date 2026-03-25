@@ -4,5 +4,19 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+}
+
+model Seaport {
+  id Int @id @default(autoincrement())
+  portName String
+  locode String @unique
+  latitude Float
+  longitude Float
+  timezoneOlson String?
+  countryIso String?
+  clientSource String @default("tilla")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("seaports")
 }

@@ -15,12 +15,15 @@
   "dependencies": {
     "@apollo/server": "5.5.0",
     "@as-integrations/fastify": "^3.1.0",
+    "@azure/storage-blob": "^12.31.0",
     "@nestjs/apollo": "13.2.4",
     "@nestjs/common": "11.1.17",
     "@nestjs/core": "11.1.17",
     "@nestjs/graphql": "13.2.4",
     "@nestjs/platform-fastify": "11.1.17",
     "@prisma/client": "7.5.0",
+    "dotenv": "^16.6.1",
+    "exceljs": "^4.4.0",
     "graphql": "16.13.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2"
