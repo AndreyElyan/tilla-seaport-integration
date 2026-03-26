@@ -6,7 +6,7 @@ import { ExcelParserService } from "./excel-parser.service";
 import { SeaportMapperService } from "./seaport-mapper.service";
 import { SeaportValidatorService } from "./seaport-validator.service";
 
-const BATCH_SIZE = 100;
+const BATCH_SIZE = 25;
 
 @Injectable()
 export class SeaportSyncService {
@@ -93,29 +93,30 @@ export class SeaportSyncService {
   }
 
   private async upsertBatch(rows: ValidatedSeaportRow[]): Promise<number> {
-    const results = await this.prisma.$transaction(
-      rows.map((row) =>
-        this.prisma.seaport.upsert({
-          where: { locode: row.locode },
-          update: {
-            portName: row.portName,
-            latitude: row.latitude,
-            longitude: row.longitude,
-            timezoneOlson: row.timezoneOlson,
-            countryIso: row.countryIso,
-          },
-          create: {
-            portName: row.portName,
-            locode: row.locode,
-            latitude: row.latitude,
-            longitude: row.longitude,
-            timezoneOlson: row.timezoneOlson,
-            countryIso: row.countryIso,
-          },
-        }),
-      ),
-    );
+    let count = 0;
 
-    return results.length;
+    for (const row of rows) {
+      await this.prisma.seaport.upsert({
+        where: { locode: row.locode },
+        update: {
+          portName: row.portName,
+          latitude: row.latitude,
+          longitude: row.longitude,
+          timezoneOlson: row.timezoneOlson,
+          countryIso: row.countryIso,
+        },
+        create: {
+          portName: row.portName,
+          locode: row.locode,
+          latitude: row.latitude,
+          longitude: row.longitude,
+          timezoneOlson: row.timezoneOlson,
+          countryIso: row.countryIso,
+        },
+      });
+      count++;
+    }
+
+    return count;
   }
 }
