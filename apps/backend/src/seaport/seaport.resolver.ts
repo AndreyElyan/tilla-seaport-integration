@@ -28,6 +28,7 @@ export class SeaportResolver {
     @Args("page", { type: () => Int, defaultValue: 1 }) page: number,
     @Args("pageSize", { type: () => Int, defaultValue: 20 }) pageSize: number,
     @Args("search", { nullable: true }) search?: string,
+    @Args("countryIso", { nullable: true }) countryIso?: string,
     @Args("sortBy", {
       type: () => SeaportSortField,
       nullable: true,
@@ -41,15 +42,24 @@ export class SeaportResolver {
     })
     sortDirection?: SortDirection,
   ): Promise<SeaportPage> {
-    const where = search
-      ? {
-          OR: [
-            { portName: { contains: search, mode: "insensitive" as const } },
-            { locode: { contains: search, mode: "insensitive" as const } },
-            { countryIso: { contains: search, mode: "insensitive" as const } },
-          ],
-        }
-      : {};
+    const conditions: Record<string, unknown>[] = [];
+
+    if (search) {
+      conditions.push({
+        OR: [
+          { portName: { contains: search, mode: "insensitive" as const } },
+          { locode: { contains: search, mode: "insensitive" as const } },
+        ],
+      });
+    }
+
+    if (countryIso) {
+      conditions.push({
+        countryIso: { equals: countryIso.toUpperCase() },
+      });
+    }
+
+    const where = conditions.length > 0 ? { AND: conditions } : {};
 
     const [items, total] = await Promise.all([
       this.prisma.seaport.findMany({

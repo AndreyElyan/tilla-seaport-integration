@@ -12,15 +12,15 @@ export function SeaportsPage() {
   const [countryFilter, setCountryFilter] = useState("");
   const [page, setPage] = useState(1);
 
-  const searchTerm =
-    countryFilter && search
-      ? `${search} ${countryFilter}`
-      : countryFilter || search;
-
   const { data, loading, error, refetch } = useQuery<{
     seaports: SeaportPage;
   }>(GET_SEAPORTS, {
-    variables: { page, pageSize: PAGE_SIZE, search: searchTerm || undefined },
+    variables: {
+      page,
+      pageSize: PAGE_SIZE,
+      search: search || undefined,
+      countryIso: countryFilter || undefined,
+    },
     fetchPolicy: "cache-and-network",
   });
 
