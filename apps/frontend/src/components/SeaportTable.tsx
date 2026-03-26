@@ -5,6 +5,14 @@ interface SeaportTableProps {
   loading: boolean;
 }
 
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
 export function SeaportTable({ seaports, loading }: SeaportTableProps) {
   if (loading) {
     return <div className="table-empty">Loading seaports...</div>;
@@ -25,6 +33,7 @@ export function SeaportTable({ seaports, loading }: SeaportTableProps) {
             <th>Latitude</th>
             <th>Longitude</th>
             <th>Timezone</th>
+            <th>Updated</th>
           </tr>
         </thead>
         <tbody>
@@ -37,8 +46,9 @@ export function SeaportTable({ seaports, loading }: SeaportTableProps) {
               <td>{port.countryIso ?? "-"}</td>
               <td className="table-cell--num">{port.latitude.toFixed(4)}</td>
               <td className="table-cell--num">{port.longitude.toFixed(4)}</td>
+              <td className="table-cell--muted">{port.timezoneOlson ?? "-"}</td>
               <td className="table-cell--muted">
-                {port.timezoneOlson ?? "-"}
+                {formatDate(port.updatedAt)}
               </td>
             </tr>
           ))}

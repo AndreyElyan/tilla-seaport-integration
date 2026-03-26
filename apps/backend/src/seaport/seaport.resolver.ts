@@ -1,6 +1,23 @@
-import { Args, Int, Query, Resolver } from "@nestjs/graphql";
-import { PrismaService } from "../prisma/prisma.service";
+import { Args, Int, Query, Resolver, registerEnumType } from "@nestjs/graphql";
+import type { PrismaService } from "../prisma/prisma.service";
 import { SeaportModel, SeaportPage } from "./seaport.model";
+
+enum SeaportSortField {
+  portName = "portName",
+  locode = "locode",
+  countryIso = "countryIso",
+  latitude = "latitude",
+  longitude = "longitude",
+  updatedAt = "updatedAt",
+}
+
+enum SortDirection {
+  asc = "asc",
+  desc = "desc",
+}
+
+registerEnumType(SeaportSortField, { name: "SeaportSortField" });
+registerEnumType(SortDirection, { name: "SortDirection" });
 
 @Resolver(() => SeaportModel)
 export class SeaportResolver {
@@ -11,6 +28,18 @@ export class SeaportResolver {
     @Args("page", { type: () => Int, defaultValue: 1 }) page: number,
     @Args("pageSize", { type: () => Int, defaultValue: 20 }) pageSize: number,
     @Args("search", { nullable: true }) search?: string,
+    @Args("sortBy", {
+      type: () => SeaportSortField,
+      nullable: true,
+      defaultValue: SeaportSortField.portName,
+    })
+    sortBy?: SeaportSortField,
+    @Args("sortDirection", {
+      type: () => SortDirection,
+      nullable: true,
+      defaultValue: SortDirection.asc,
+    })
+    sortDirection?: SortDirection,
   ): Promise<SeaportPage> {
     const where = search
       ? {
@@ -27,7 +56,7 @@ export class SeaportResolver {
         where,
         skip: (page - 1) * pageSize,
         take: pageSize,
-        orderBy: { portName: "asc" },
+        orderBy: { [sortBy ?? "portName"]: sortDirection ?? "asc" },
       }),
       this.prisma.seaport.count({ where }),
     ]);
@@ -42,9 +71,7 @@ export class SeaportResolver {
   }
 
   @Query(() => SeaportModel, { nullable: true })
-  async seaport(
-    @Args("locode") locode: string,
-  ): Promise<SeaportModel | null> {
+  async seaport(@Args("locode") locode: string): Promise<SeaportModel | null> {
     return this.prisma.seaport.findUnique({
       where: { locode },
     });

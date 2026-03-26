@@ -54,7 +54,12 @@ const DMS_LAT_COLUMNS = {
 const DMS_LON_COLUMNS = {
   degree: ["londegree", "lon_degree", "lon degree", "longdegree"],
   minutes: ["lonminutes", "lon_minutes", "lon minutes", "longminutes"],
-  direction: ["londirection", "lon_direction", "lon direction", "longdirection"],
+  direction: [
+    "londirection",
+    "lon_direction",
+    "lon direction",
+    "longdirection",
+  ],
 };
 
 function findDmsValue(
@@ -84,6 +89,14 @@ function dmsToDecimal(
   }
 
   return decimal;
+}
+
+function sanitizePortName(raw: string): string {
+  return raw
+    .replace(/<[^>]*>/g, "")
+    .replace(/\s*\{[^}]*\}\s*/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function buildColumnMap(headers: string[]): Map<string, SeaportField> {
@@ -135,7 +148,9 @@ export class SeaportMapperService {
     const hasDmsLat = DMS_LAT_COLUMNS.degree.some((a) => allHeaders.has(a));
     const hasDmsLon = DMS_LON_COLUMNS.degree.some((a) => allHeaders.has(a));
     if (hasDmsLat || hasDmsLon) {
-      this.logger.log("DMS coordinate columns detected, will convert to decimal");
+      this.logger.log(
+        "DMS coordinate columns detected, will convert to decimal",
+      );
     }
 
     return rows.map((row) => {
@@ -160,6 +175,9 @@ export class SeaportMapperService {
         } else if (field === "countryIso") {
           mapped[field] =
             value != null ? resolveCountryIso(String(value)) : undefined;
+        } else if (field === "portName") {
+          mapped[field] =
+            value != null ? sanitizePortName(String(value)) : undefined;
         } else {
           mapped[field] = value != null ? String(value).trim() : undefined;
         }

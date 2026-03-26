@@ -9,10 +9,14 @@ export function SyncResultBanner({ result, onDismiss }: SyncResultBannerProps) {
   const hasErrors = result.invalidRows > 0;
 
   return (
-    <div className={`banner ${hasErrors ? "banner--warning" : "banner--success"}`}>
+    <div
+      className={`banner ${hasErrors ? "banner--warning" : "banner--success"}`}
+    >
       <div className="banner-content">
         <div className="banner-summary">
-          <strong>Sync completed in {(result.duration / 1000).toFixed(1)}s</strong>
+          <strong>
+            Sync completed in {(result.duration / 1000).toFixed(1)}s
+          </strong>
           <span className="banner-divider">|</span>
           <span>{result.upsertedRows} upserted</span>
           <span className="banner-divider">|</span>
@@ -47,7 +51,7 @@ export function SyncResultBanner({ result, onDismiss }: SyncResultBannerProps) {
           </details>
         )}
       </div>
-      <button className="banner-dismiss" onClick={onDismiss}>
+      <button type="button" className="banner-dismiss" onClick={onDismiss}>
         &#10005;
       </button>
     </div>

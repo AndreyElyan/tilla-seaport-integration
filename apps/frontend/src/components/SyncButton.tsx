@@ -25,6 +25,7 @@ export function SyncButton({ onComplete }: SyncButtonProps) {
       </div>
 
       <button
+        type="button"
         className="sync-btn"
         disabled={loading}
         onClick={() => syncSeaports()}
@@ -86,7 +87,8 @@ export function SyncButton({ onComplete }: SyncButtonProps) {
               <ul className="sync-error-list">
                 {result.errors.slice(0, 20).map((err) => (
                   <li key={err.rowIndex}>
-                    <strong>Row {err.rowIndex}:</strong> {err.reasons.join(", ")}
+                    <strong>Row {err.rowIndex}:</strong>{" "}
+                    {err.reasons.join(", ")}
                   </li>
                 ))}
                 {result.errors.length > 20 && (

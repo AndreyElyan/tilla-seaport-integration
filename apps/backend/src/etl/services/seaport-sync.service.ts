@@ -1,10 +1,10 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { PrismaService } from "../../prisma/prisma.service";
+import type { PrismaService } from "../../prisma/prisma.service";
 import type { SyncResult, ValidatedSeaportRow } from "../dto/seaport-row.dto";
-import { BlobStorageService } from "./blob-storage.service";
-import { ExcelParserService } from "./excel-parser.service";
-import { SeaportMapperService } from "./seaport-mapper.service";
-import { SeaportValidatorService } from "./seaport-validator.service";
+import type { BlobStorageService } from "./blob-storage.service";
+import type { ExcelParserService } from "./excel-parser.service";
+import type { SeaportMapperService } from "./seaport-mapper.service";
+import type { SeaportValidatorService } from "./seaport-validator.service";
 
 const BATCH_SIZE = 25;
 
@@ -96,25 +96,31 @@ export class SeaportSyncService {
     let count = 0;
 
     for (const row of rows) {
-      await this.prisma.seaport.upsert({
-        where: { locode: row.locode },
-        update: {
-          portName: row.portName,
-          latitude: row.latitude,
-          longitude: row.longitude,
-          timezoneOlson: row.timezoneOlson,
-          countryIso: row.countryIso,
-        },
-        create: {
-          portName: row.portName,
-          locode: row.locode,
-          latitude: row.latitude,
-          longitude: row.longitude,
-          timezoneOlson: row.timezoneOlson,
-          countryIso: row.countryIso,
-        },
-      });
-      count++;
+      try {
+        await this.prisma.seaport.upsert({
+          where: { locode: row.locode },
+          update: {
+            portName: row.portName,
+            latitude: row.latitude,
+            longitude: row.longitude,
+            timezoneOlson: row.timezoneOlson,
+            countryIso: row.countryIso,
+          },
+          create: {
+            portName: row.portName,
+            locode: row.locode,
+            latitude: row.latitude,
+            longitude: row.longitude,
+            timezoneOlson: row.timezoneOlson,
+            countryIso: row.countryIso,
+          },
+        });
+        count++;
+      } catch (err) {
+        this.logger.error(
+          `Failed to upsert locode=${row.locode}: ${err instanceof Error ? err.message : err}`,
+        );
+      }
     }
 
     return count;

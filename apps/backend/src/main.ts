@@ -1,5 +1,5 @@
-import { config } from "dotenv";
 import { resolve } from "node:path";
+import { config } from "dotenv";
 
 config({ path: resolve(__dirname, "../../../.env") });
 
@@ -19,7 +19,7 @@ async function bootstrap() {
   app.enableShutdownHooks();
 
   app.enableCors({
-    origin: "http://localhost:3001",
+    origin: process.env.CORS_ORIGIN ?? "http://localhost:3001",
   });
 
   const port = process.env.PORT ?? 3000;

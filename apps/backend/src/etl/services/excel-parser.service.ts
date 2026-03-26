@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import type { CellValue } from "exceljs";
 import { Workbook } from "exceljs";
-import { RawExcelRow } from "../dto/seaport-row.dto";
+import type { RawExcelRow } from "../dto/seaport-row.dto";
 
 function extractCellText(value: CellValue): unknown {
   if (value == null) return undefined;

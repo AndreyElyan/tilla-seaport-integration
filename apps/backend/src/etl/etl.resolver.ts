@@ -1,5 +1,5 @@
 import { Field, Int, Mutation, ObjectType, Resolver } from "@nestjs/graphql";
-import { SeaportSyncService } from "./services/seaport-sync.service";
+import type { SeaportSyncService } from "./services/seaport-sync.service";
 
 @ObjectType()
 class SyncError {
