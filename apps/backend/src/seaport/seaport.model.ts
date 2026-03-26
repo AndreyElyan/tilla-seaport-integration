@@ -17,10 +17,10 @@ export class SeaportModel {
   @Field(() => Float)
   longitude!: number;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   timezoneOlson!: string | null;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   countryIso!: string | null;
 
   @Field()

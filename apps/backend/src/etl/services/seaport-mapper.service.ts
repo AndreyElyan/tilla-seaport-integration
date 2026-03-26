@@ -1,4 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
+import { resolveCountryIso } from "../data/country-lookup";
 import type { MappedSeaportRow, RawExcelRow } from "../dto/seaport-row.dto";
 
 type SeaportField = keyof MappedSeaportRow;
@@ -16,7 +17,10 @@ const FIELD_ALIASES: Record<string, SeaportField> = {
   port_name: "portName",
   portname: "portName",
   name: "portName",
+  "port locode": "locode",
+  "port code": "locode",
   "un/locode": "locode",
+  "un locode": "locode",
   unlocode: "locode",
   un_locode: "locode",
   code: "locode",
@@ -27,6 +31,7 @@ const FIELD_ALIASES: Record<string, SeaportField> = {
   long: "longitude",
   "long.": "longitude",
   timezone: "timezoneOlson",
+  "timezone olson": "timezoneOlson",
   tz: "timezoneOlson",
   tz_olson: "timezoneOlson",
   olson: "timezoneOlson",
@@ -63,6 +68,12 @@ export class SeaportMapperService {
     }
 
     const headers = Object.keys(rows[0]);
+    this.logger.debug(
+      `Raw headers: ${JSON.stringify(headers)}`,
+    );
+    this.logger.debug(
+      `First row sample: ${JSON.stringify(rows[0])}`,
+    );
     const columnMap = buildColumnMap(headers);
 
     this.logger.log(
@@ -90,6 +101,9 @@ export class SeaportMapperService {
         if (field === "latitude" || field === "longitude") {
           mapped[field] =
             typeof value === "number" ? value : parseFloat(String(value));
+        } else if (field === "countryIso") {
+          mapped[field] =
+            value != null ? resolveCountryIso(String(value)) : undefined;
         } else {
           mapped[field] = value != null ? String(value).trim() : undefined;
         }

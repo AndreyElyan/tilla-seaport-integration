@@ -1,6 +1,25 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { RawExcelRow } from "../dto/seaport-row.dto";
+import type { CellValue } from "exceljs";
 import { Workbook } from "exceljs";
+import { RawExcelRow } from "../dto/seaport-row.dto";
+
+function extractCellText(value: CellValue): unknown {
+  if (value == null) return undefined;
+
+  if (typeof value === "object" && "richText" in value) {
+    return value.richText.map((part) => part.text).join("");
+  }
+
+  if (typeof value === "object" && "text" in value) {
+    return (value as { text: string }).text;
+  }
+
+  if (typeof value === "object" && "result" in value) {
+    return extractCellText((value as { result: CellValue }).result);
+  }
+
+  return value;
+}
 
 @Injectable()
 export class ExcelParserService {
@@ -24,25 +43,33 @@ export class ExcelParserService {
     const headers: string[] = [];
     const rows: RawExcelRow[] = [];
 
-    worksheet.eachRow((row, rowNumber) => {
-      if (rowNumber === 1) {
-        row.eachCell((cell, colNumber) => {
-          headers[colNumber] = String(cell.value ?? "").trim();
-        });
+    const headerRow = worksheet.getRow(1);
+    headerRow.eachCell((cell, colNumber) => {
+      const text = extractCellText(cell.value);
+      headers[colNumber] = String(text ?? "")
+        .trim()
+        .toLowerCase();
+    });
 
-        return;
-      }
+    const colCount = headers.length;
 
+    for (let r = 2; r <= worksheet.rowCount; r++) {
+      const row = worksheet.getRow(r);
       const rowData: RawExcelRow = {};
 
-      row.eachCell((cell, colNumber) => {
-        const header = headers[colNumber];
-        if (header) {
-          rowData[header] = cell.value;
+      for (let c = 1; c < colCount; c++) {
+        const header = headers[c];
+        if (!header) continue;
+        const value = extractCellText(row.getCell(c).value);
+        if (value !== undefined) {
+          rowData[header] = value;
         }
-      });
-      rows.push(rowData);
-    });
+      }
+
+      if (Object.keys(rowData).length > 0) {
+        rows.push(rowData);
+      }
+    }
 
     this.logger.log(
       `Finished parsing. Total rows parsed: ${rows.length} data rows with headers: [${headers.filter(Boolean).join(", ")}]`,

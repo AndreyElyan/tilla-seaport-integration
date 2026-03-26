@@ -2,7 +2,9 @@ import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import { ApolloProvider } from "@apollo/client/react";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
 import { App } from "./App";
+import "./styles/index.css";
 
 const client = new ApolloClient({
   link: new HttpLink({ uri: "/graphql" }),
@@ -12,8 +14,10 @@ const client = new ApolloClient({
 const root = document.getElementById("root") as HTMLElement;
 createRoot(root).render(
   <StrictMode>
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
+    <BrowserRouter>
+      <ApolloProvider client={client}>
+        <App />
+      </ApolloProvider>
+    </BrowserRouter>
   </StrictMode>,
 );
