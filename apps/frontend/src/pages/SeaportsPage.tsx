@@ -61,6 +61,7 @@ export function SeaportsPage() {
       {seaportPage && seaportPage.totalPages > 1 && (
         <div className="pagination">
           <button
+            type="button"
             className="pagination-btn"
             disabled={page <= 1}
             onClick={() => setPage((p) => p - 1)}
@@ -71,6 +72,7 @@ export function SeaportsPage() {
             Page {seaportPage.page} of {seaportPage.totalPages}
           </span>
           <button
+            type="button"
             className="pagination-btn"
             disabled={page >= seaportPage.totalPages}
             onClick={() => setPage((p) => p + 1)}
