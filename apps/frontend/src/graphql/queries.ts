@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_SEAPORTS = gql`
-  query GetSeaports($page: Int, $pageSize: Int, $search: String, $countryIso: String) {
-    seaports(page: $page, pageSize: $pageSize, search: $search, countryIso: $countryIso) {
+  query GetSeaports($page: Int, $pageSize: Int, $search: String, $countryIso: String, $sortBy: SeaportSortField, $sortDirection: SortDirection) {
+    seaports(page: $page, pageSize: $pageSize, search: $search, countryIso: $countryIso, sortBy: $sortBy, sortDirection: $sortDirection) {
       items {
         id
         portName

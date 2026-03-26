@@ -294,6 +294,44 @@ a:hover {
   font-family: "SF Mono", "Cascadia Code", "Fira Code", monospace;
 }
 
+.table-badge {
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.th-sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.15s;
+}
+
+.th-sortable:hover {
+  color: var(--text);
+}
+
+.sort-icon {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 0.5rem;
+  vertical-align: middle;
+}
+
+.sort-icon--inactive::after {
+  content: "\25B4\25BE";
+  opacity: 0.25;
+  font-size: 0.6rem;
+  letter-spacing: -2px;
+}
+
+.sort-icon--active {
+  color: var(--primary);
+  font-size: 0.55rem;
+}
+
 .table-empty {
   padding: 48px 24px;
   text-align: center;
