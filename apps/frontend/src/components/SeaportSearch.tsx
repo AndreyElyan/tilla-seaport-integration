@@ -25,6 +25,13 @@ export function SeaportSearch({
     onCountryFilter(country.trim().toUpperCase());
   }, [country, onCountryFilter]);
 
+  const hasFilters = query.length > 0 || country.length > 0;
+
+  const handleClear = () => {
+    setQuery("");
+    setCountry("");
+  };
+
   return (
     <div className="search-bar">
       <div className="search-inputs">
@@ -32,14 +39,25 @@ export function SeaportSearch({
           <label className="search-label" htmlFor="search">
             Search
           </label>
-          <input
-            id="search"
-            className="search-input"
-            type="text"
-            placeholder="Port name or LOCODE..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
+          <div className="search-input-wrap">
+            <input
+              id="search"
+              className="search-input"
+              type="text"
+              placeholder="Port name or LOCODE..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            {query && (
+              <button
+                type="button"
+                className="search-clear"
+                onClick={() => setQuery("")}
+              >
+                &#10005;
+              </button>
+            )}
+          </div>
         </div>
         <div className="search-field search-field--small">
           <label className="search-label" htmlFor="country">
@@ -55,10 +73,22 @@ export function SeaportSearch({
             onChange={(e) => setCountry(e.target.value)}
           />
         </div>
+        {hasFilters && (
+          <button
+            type="button"
+            className="search-clear-all"
+            onClick={handleClear}
+          >
+            Clear filters
+          </button>
+        )}
       </div>
-      <span className="search-count">
-        {total.toLocaleString()} {total === 1 ? "port" : "ports"}
-      </span>
+      <div className="search-total">
+        <span className="search-total-num">{total.toLocaleString()}</span>
+        <span className="search-total-label">
+          {total === 1 ? "port" : "ports"}
+        </span>
+      </div>
     </div>
   );
 }

@@ -192,6 +192,11 @@ a:hover {
   letter-spacing: 0.05em;
 }
 
+.search-input-wrap {
+  position: relative;
+  display: flex;
+}
+
 .search-input {
   padding: 10px 14px;
   background: var(--bg);
@@ -213,11 +218,73 @@ a:hover {
   border-color: var(--primary);
 }
 
-.search-count {
-  font-size: 0.8125rem;
+.search-input-wrap .search-input {
+  width: 100%;
+  padding-right: 32px;
+}
+
+.search-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
   color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.7rem;
+  padding: 4px;
+  border-radius: 4px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.search-clear:hover {
+  color: var(--text);
+}
+
+.search-clear-all {
+  align-self: flex-end;
+  padding: 10px 14px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-family: var(--font);
+  cursor: pointer;
   white-space: nowrap;
-  padding-bottom: 10px;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.search-clear-all:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+
+.search-total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 4px;
+  min-width: 56px;
+}
+
+.search-total-num {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.search-total-label {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* Table */
@@ -226,6 +293,12 @@ a:hover {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--surface);
+  transition: opacity 0.15s;
+}
+
+.table-wrapper--fetching {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .table {
@@ -700,4 +773,36 @@ a:hover {
 .not-found p {
   color: var(--text-muted);
   margin-bottom: 20px;
+}
+
+/* Page Header */
+.page-header {
+  margin-bottom: 20px;
+}
+
+/* Skeleton Loading */
+.skeleton {
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--border) 25%,
+    rgba(255, 255, 255, 0.06) 50%,
+    var(--border) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.table-row--skeleton td {
+  padding: 14px 16px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }

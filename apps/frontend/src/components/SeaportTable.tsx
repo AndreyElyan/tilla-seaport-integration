@@ -12,6 +12,7 @@ export type SortDir = "asc" | "desc";
 interface SeaportTableProps {
   seaports: Seaport[];
   loading: boolean;
+  fetching: boolean;
   sortBy: SortField;
   sortDirection: SortDir;
   onSort: (field: SortField) => void;
@@ -52,12 +53,40 @@ function SortIcon({
 export function SeaportTable({
   seaports,
   loading,
+  fetching,
   sortBy,
   sortDirection,
   onSort,
 }: SeaportTableProps) {
   if (loading) {
-    return <div className="table-empty">Loading seaports...</div>;
+    return (
+      <div className="table-wrapper">
+        <table className="table">
+          <thead>
+            <tr>
+              {COLUMNS.map((col) => (
+                <th key={col.field}>{col.label}</th>
+              ))}
+              <th>Timezone</th>
+              <th>Source</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.from({ length: 8 }).map((_, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton rows
+              <tr key={`skel-${i}`} className="table-row--skeleton">
+                {Array.from({ length: 8 }).map((_, j) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton cells
+                  <td key={`skel-${i}-${j}`}>
+                    <div className="skeleton" />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
   }
 
   if (seaports.length === 0) {
@@ -65,7 +94,9 @@ export function SeaportTable({
   }
 
   return (
-    <div className="table-wrapper">
+    <div
+      className={`table-wrapper ${fetching ? "table-wrapper--fetching" : ""}`}
+    >
       <table className="table">
         <thead>
           <tr>

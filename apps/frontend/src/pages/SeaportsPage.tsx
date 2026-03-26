@@ -59,6 +59,10 @@ export function SeaportsPage() {
 
   return (
     <div>
+      <div className="page-header">
+        <h2 className="page-title">Seaports</h2>
+      </div>
+
       {error && (
         <div className="error-banner">
           <span>Failed to load seaports: {error.message}</span>
@@ -81,6 +85,7 @@ export function SeaportsPage() {
       <SeaportTable
         seaports={seaportPage?.items ?? []}
         loading={loading && !data}
+        fetching={loading && !!data}
         sortBy={sortBy}
         sortDirection={sortDirection}
         onSort={handleSort}
