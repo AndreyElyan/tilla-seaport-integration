@@ -1,5 +1,5 @@
 import { Args, Int, Query, Resolver, registerEnumType } from "@nestjs/graphql";
-import type { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "../prisma/prisma.service";
 import { SeaportModel, SeaportPage } from "./seaport.model";
 
 enum SeaportSortField {

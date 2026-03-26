@@ -1,10 +1,10 @@
 import { Injectable, Logger } from "@nestjs/common";
-import type { PrismaService } from "../../prisma/prisma.service";
+import { PrismaService } from "../../prisma/prisma.service";
 import type { SyncResult, ValidatedSeaportRow } from "../dto/seaport-row.dto";
-import type { BlobStorageService } from "./blob-storage.service";
-import type { ExcelParserService } from "./excel-parser.service";
-import type { SeaportMapperService } from "./seaport-mapper.service";
-import type { SeaportValidatorService } from "./seaport-validator.service";
+import { BlobStorageService } from "./blob-storage.service";
+import { ExcelParserService } from "./excel-parser.service";
+import { SeaportMapperService } from "./seaport-mapper.service";
+import { SeaportValidatorService } from "./seaport-validator.service";
 
 const BATCH_SIZE = 25;
 

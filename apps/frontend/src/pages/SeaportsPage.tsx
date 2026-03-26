@@ -41,7 +41,11 @@ export function SeaportsPage() {
       {error && (
         <div className="error-banner">
           <span>Failed to load seaports: {error.message}</span>
-          <button type="button" className="error-retry-btn" onClick={() => refetch()}>
+          <button
+            type="button"
+            className="error-retry-btn"
+            onClick={() => refetch()}
+          >
             Retry
           </button>
         </div>
