@@ -183,6 +183,11 @@ export class SeaportMapperService {
         }
       }
 
+      const portcode = row.portcode;
+      if (portcode != null) {
+        mapped.locode = String(portcode).trim();
+      }
+
       if (mapped.latitude == null && hasDmsLat) {
         mapped.latitude = dmsToDecimal(
           findDmsValue(row, DMS_LAT_COLUMNS.degree),
